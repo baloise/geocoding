@@ -51,3 +51,4 @@ local.properties
 .texlipse
 
 /Post_Adressdaten*.csv
+/save.bin
