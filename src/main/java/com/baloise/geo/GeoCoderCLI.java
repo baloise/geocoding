@@ -12,18 +12,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.baloise.geo.model.Jvnfras;
-import com.baloise.geo.model.NewGeb;
-import com.baloise.geo.model.NewPlz1;
-import com.baloise.geo.model.NewStr;
+import com.baloise.geo.model.Gebaeude;
+import com.baloise.geo.model.Postleitzahl;
+import com.baloise.geo.model.Strasse;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 public class GeoCoderCLI {
 
-	Jvnfras<Integer, NewPlz1> plz = new Jvnfras<>();
-	Jvnfras<String, NewStr> strassen = new Jvnfras<>();
-	Jvnfras<String, NewGeb> gebaeude = new Jvnfras<>();
+	Jvnfras<Integer, Postleitzahl> plz = new Jvnfras<>();
+	Jvnfras<String, Strasse> strassen = new Jvnfras<>();
+	Jvnfras<String, Gebaeude> gebaeude = new Jvnfras<>();
 	transient GeoCodeXyz geoCodeXyz = new GeoCodeXyz();
 	
 	public static void main(String[] args) throws Exception {
@@ -45,8 +45,12 @@ public class GeoCoderCLI {
 		gebaeude.values().stream().limit(3).forEach(this::encode);
 	}
 	
-	private void encode(NewGeb geb) {
-		geoCodeXyz.code(geb);
+	private void encode(Gebaeude geb) {
+		try {
+			geoCodeXyz.code(geb);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static GeoCoderCLI load(Kryo kryo, File save) throws FileNotFoundException, IOException {
@@ -70,14 +74,14 @@ public class GeoCoderCLI {
 		String[] tokens = line.split(";");
 		int REC_ART = Integer.valueOf(tokens[0]);
 		switch (REC_ART) {
-		case NewPlz1.REC_ART:
-			plz.put(NewPlz1.load(tokens));
+		case Postleitzahl.REC_ART:
+			plz.put(Postleitzahl.load(tokens));
 			break;
-		case NewStr.REC_ART:
-			strassen.put(NewStr.load(tokens,plz));
+		case Strasse.REC_ART:
+			strassen.put(Strasse.load(tokens,plz));
 			break;
-		case NewGeb.REC_ART:
-			gebaeude.put(NewGeb.load(tokens, strassen));
+		case Gebaeude.REC_ART:
+			gebaeude.put(Gebaeude.load(tokens, strassen));
 			break;
 		default:
 			break;

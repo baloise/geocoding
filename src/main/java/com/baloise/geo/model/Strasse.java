@@ -1,6 +1,6 @@
 package com.baloise.geo.model;
 
-public class NewStr extends Jvnfra<String>{
+public class Strasse extends Jvnfra<String>{
 
 	public final static int REC_ART = 4;
 	/**
@@ -16,15 +16,15 @@ public class NewStr extends Jvnfra<String>{
 	 */
 	public String STRBEZ2L;
 	
-	public NewPlz1 plz;
+	public Postleitzahl plz;
 	
 	@Override
 	public String getID() {
 		return STRID;
 	}
 	
-	public static NewStr load(String[] tokens, Jvnfras<Integer, NewPlz1> plz) {
-		NewStr ret = new NewStr();
+	public static Strasse load(String[] tokens, Jvnfras<Integer, Postleitzahl> plz) {
+		Strasse ret = new Strasse();
 		ret.STRID = tokens[1];
 		ret.ONRP = Integer.valueOf(tokens[2]);
 		ret.STRBEZ2L = tokens[6];

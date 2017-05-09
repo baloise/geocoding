@@ -2,7 +2,7 @@ package com.baloise.geo.model;
 
 import java.util.Arrays;
 
-public class NewGeb extends Jvnfra<String> {
+public class Gebaeude extends Jvnfra<String> {
 
 	public final static int REC_ART = 6;
 	/**
@@ -22,16 +22,16 @@ public class NewGeb extends Jvnfra<String> {
 	 * 4
 	 */
 	public String HNRA;
-	public NewStr strasse;
+	public Strasse strasse;
 
 	@Override
 	public String getID() {
 		return HAUSKEY;
 	}
 	
-	public static NewGeb load(String[] tokens, Jvnfras<String, NewStr> strassen) {
+	public static Gebaeude load(String[] tokens, Jvnfras<String, Strasse> strassen) {
 		try {
-			NewGeb ret = new NewGeb();
+			Gebaeude ret = new Gebaeude();
 			ret.HAUSKEY = tokens[1];
 			ret.STRID = tokens[2];
 			ret.HNR = integerOrNull(tokens[3]);
