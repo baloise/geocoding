@@ -1,5 +1,6 @@
 package com.baloise.geo.model;
 
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -17,6 +18,10 @@ public class Jvnfras<T extends Comparable<T>, J extends Jvnfra<T>> {
 
 	public int size() {
 		return jvnfras.size();
+	}
+
+	public Collection<J> values() {
+		return jvnfras.values();
 	}
 	
 }

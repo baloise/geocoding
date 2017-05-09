@@ -17,6 +17,5 @@ public abstract class Jvnfra<T extends Comparable<T>> implements Comparable<Jvnf
 	public int compareTo(Jvnfra<T> o) {
 		return getID().compareTo(o.getID());
 	}
-	
 }
 

@@ -16,16 +16,20 @@ public class NewStr extends Jvnfra<String>{
 	 */
 	public String STRBEZ2L;
 	
+	public NewPlz1 plz;
+	
 	@Override
 	public String getID() {
 		return STRID;
 	}
 	
-	public static NewStr load(String[] tokens) {
+	public static NewStr load(String[] tokens, Jvnfras<Integer, NewPlz1> plz) {
 		NewStr ret = new NewStr();
 		ret.STRID = tokens[1];
 		ret.ONRP = Integer.valueOf(tokens[2]);
 		ret.STRBEZ2L = tokens[6];
+		ret.plz = plz.get(ret.ONRP);
 		return ret ;
 	}
+
 }
