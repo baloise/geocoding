@@ -3,9 +3,10 @@ package com.baloise.geo.model;
 public abstract class Jvnfra<T extends Comparable<T>> implements Comparable<Jvnfra<T>> {
 	public abstract T getID();
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
-		return getID().equals(((Jvnfra)obj).getID());
+		return getID().equals(((Jvnfra<T>)obj).getID());
 	}
 	
 	@Override
