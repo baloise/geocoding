@@ -25,7 +25,8 @@ public class GeoCodeXyz implements GeoCoder {
 			JSONObject json = Unirest.get(url).asJson().getBody().getObject();
 			Location loc = new Location();
 			loc.representation =json.toString();
-			loc.confidence = json.getDouble("longt");
+			loc.confidence = json.getJSONObject("standard").getDouble("confidence");
+			loc.longitude = json.getDouble("longt");
 			loc.latitude = json.getDouble("latt");
 			return loc;
 		} catch (UnirestException e) {
