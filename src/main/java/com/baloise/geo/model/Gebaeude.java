@@ -2,17 +2,17 @@ package com.baloise.geo.model;
 
 import java.util.Arrays;
 
-public class Gebaeude extends Jvnfra<String> {
+public class Gebaeude extends Jvnfra {
 
 	public final static int REC_ART = 6;
 	/**
 	 * 1
 	 */
-	public String HAUSKEY;
+	public Long HAUSKEY;
 	/**
 	 * 2
 	 */
-	public String  STRID;
+	public Long  STRID;
 	/**
 	 * 3
 	 */
@@ -25,15 +25,15 @@ public class Gebaeude extends Jvnfra<String> {
 	public Strasse strasse;
 
 	@Override
-	public String getID() {
+	public Long getID() {
 		return HAUSKEY;
 	}
 	
-	public static Gebaeude load(String[] tokens, Jvnfras<String, Strasse> strassen) {
+	public static Gebaeude load(String[] tokens, Jvnfras<Strasse> strassen) {
 		try {
 			Gebaeude ret = new Gebaeude();
-			ret.HAUSKEY = tokens[1];
-			ret.STRID = tokens[2];
+			ret.HAUSKEY = Long.valueOf(tokens[1]);
+			ret.STRID = Long.valueOf(tokens[2]);
 			ret.HNR = integerOrNull(tokens[3]);
 			ret.HNRA = tokens[4];
 			ret.strasse = strassen.get(ret.STRID);
@@ -46,5 +46,9 @@ public class Gebaeude extends Jvnfra<String> {
 
 	private static Integer integerOrNull(String string) {
 		return (string == null || string.isEmpty()) ? null : Integer.valueOf(string);
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(Long.MAX_VALUE);
 	}
 }

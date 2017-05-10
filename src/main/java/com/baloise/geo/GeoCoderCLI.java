@@ -1,7 +1,5 @@
 package com.baloise.geo;
 
-import static java.lang.String.format;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,8 +9,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.baloise.geo.model.Jvnfras;
 import com.baloise.geo.model.Gebaeude;
+import com.baloise.geo.model.Jvnfras;
 import com.baloise.geo.model.Postleitzahl;
 import com.baloise.geo.model.Strasse;
 import com.esotericsoftware.kryo.Kryo;
@@ -21,9 +19,9 @@ import com.esotericsoftware.kryo.io.Output;
 
 public class GeoCoderCLI {
 
-	Jvnfras<Integer, Postleitzahl> plz = new Jvnfras<>();
-	Jvnfras<String, Strasse> strassen = new Jvnfras<>();
-	Jvnfras<String, Gebaeude> gebaeude = new Jvnfras<>();
+	Jvnfras<Postleitzahl> plz = new Jvnfras<>();
+	Jvnfras<Strasse> strassen = new Jvnfras<>();
+	Jvnfras<Gebaeude> gebaeude = new Jvnfras<>();
 	transient GeoCodeXyz geoCodeXyz = new GeoCodeXyz();
 	
 	public static void main(String[] args) throws Exception {
@@ -42,12 +40,12 @@ public class GeoCoderCLI {
 	}
 
 	private void encode() {
-		gebaeude.values().stream().limit(3).forEach(this::encode);
+		gebaeude.values().stream().limit(1).forEach(this::encode);
 	}
 	
 	private void encode(Gebaeude geb) {
 		try {
-			geoCodeXyz.code(geb);
+			System.out.println(geoCodeXyz.code(geb).rep);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

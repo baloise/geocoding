@@ -1,12 +1,12 @@
 package com.baloise.geo.model;
 
-public class Postleitzahl extends Jvnfra<Integer>{
+public class Postleitzahl extends Jvnfra{
 
 	public final static int REC_ART = 1;
 	/**
 	 * 1
 	 */
-	public int ONRP;
+	public Long ONRP;
 	/**
 	 * 4
 	 */
@@ -22,7 +22,7 @@ public class Postleitzahl extends Jvnfra<Integer>{
 	
 	public static Postleitzahl load(String[] tokens) {
 		Postleitzahl ret = new Postleitzahl();
-		ret.ONRP = Integer.valueOf(tokens[1]);
+		ret.ONRP = Long.valueOf(tokens[1]);
 		ret.POSTLEITZAHL = Integer.valueOf(tokens[4]);
 		ret.ORTBEZ18 = tokens[7];
 		ret.ORTBEZ27 = tokens[8];
@@ -30,7 +30,7 @@ public class Postleitzahl extends Jvnfra<Integer>{
 	}
 
 	@Override
-	public Integer getID() {
+	public Long getID() {
 		return ONRP;
 	}
 }

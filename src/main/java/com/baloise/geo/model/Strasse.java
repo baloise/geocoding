@@ -1,12 +1,12 @@
 package com.baloise.geo.model;
 
-public class Strasse extends Jvnfra<String>{
+public class Strasse extends Jvnfra{
 
 	public final static int REC_ART = 4;
 	/**
 	 * 1
 	 */
-	public String STRID;
+	public Long STRID;
 	/**
 	 * 2
 	 */
@@ -19,13 +19,13 @@ public class Strasse extends Jvnfra<String>{
 	public Postleitzahl plz;
 	
 	@Override
-	public String getID() {
+	public Long getID() {
 		return STRID;
 	}
 	
-	public static Strasse load(String[] tokens, Jvnfras<Integer, Postleitzahl> plz) {
+	public static Strasse load(String[] tokens, Jvnfras<Postleitzahl> plz) {
 		Strasse ret = new Strasse();
-		ret.STRID = tokens[1];
+		ret.STRID = Long.valueOf(tokens[1]);
 		ret.ONRP = Integer.valueOf(tokens[2]);
 		ret.STRBEZ2L = tokens[6];
 		ret.plz = plz.get(ret.ONRP);

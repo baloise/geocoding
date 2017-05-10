@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Jvnfras<T extends Comparable<T>, J extends Jvnfra<T>> {
+public class Jvnfras<J extends Jvnfra> {
 	
-	SortedMap<T, J> jvnfras = new TreeMap<>();
+	SortedMap<Long, J> jvnfras = new TreeMap<>();
 	
-	public J get(T id) {
+	public J get(long id) {
 		return jvnfras.get(id);
 	}
 	
