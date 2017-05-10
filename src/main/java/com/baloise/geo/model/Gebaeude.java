@@ -48,7 +48,4 @@ public class Gebaeude extends Jvnfra {
 		return (string == null || string.isEmpty()) ? null : Integer.valueOf(string);
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(Long.MAX_VALUE);
-	}
 }
