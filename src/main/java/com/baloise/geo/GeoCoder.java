@@ -7,5 +7,5 @@ import com.baloise.geo.model.Location;
 
 @FunctionalInterface
 public interface GeoCoder {
-	Location code(Gebaeude geb) throws IOException;
+	Location locate(Gebaeude geb) throws IOException;
 }

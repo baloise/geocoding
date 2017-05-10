@@ -22,14 +22,14 @@ public class GeoCoderCLI {
 	Jvnfras<Postleitzahl> plz = new Jvnfras<>();
 	Jvnfras<Strasse> strassen = new Jvnfras<>();
 	Jvnfras<Gebaeude> gebaeude = new Jvnfras<>();
-	transient GeoCodeXyz geoCodeXyz = new GeoCodeXyz();
-	
+	transient GeoCoder geoCodeXyz = new GeoCoderCache(new GeoCodeXyz(), Paths.get("repo"));
+
 	public static void main(String[] args) throws Exception {
 		Kryo kryo = new Kryo();
 		File save = new File("save.bin");
 		GeoCoderCLI geo = load(kryo, save);
 
-		geo.encode();
+		geo.locate();
 		
 		if (!save.exists()) {
 			try (Output output = new Output(new FileOutputStream(save));) {
@@ -39,13 +39,13 @@ public class GeoCoderCLI {
 
 	}
 
-	private void encode() {
-		gebaeude.values().stream().limit(1).forEach(this::encode);
+	private void locate() {
+		gebaeude.values().stream().limit(1).forEach(this::locate);
 	}
 	
-	private void encode(Gebaeude geb) {
+	private void locate(Gebaeude geb) {
 		try {
-			System.out.println(geoCodeXyz.code(geb).representation);
+			System.out.println(geoCodeXyz.locate(geb).representation);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +53,7 @@ public class GeoCoderCLI {
 	
 	private static GeoCoderCLI load(Kryo kryo, File save) throws FileNotFoundException, IOException {
 		GeoCoderCLI geo;
-		if (save.exists()) {
+		if (false || save.exists()) {
 			try (Input input = new Input(new FileInputStream(save))) {
 				geo = kryo.readObject(input, GeoCoderCLI.class);
 			}

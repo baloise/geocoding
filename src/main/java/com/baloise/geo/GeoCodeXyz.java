@@ -7,8 +7,10 @@ import java.io.IOException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
 
+import com.baloise.geo.model.Format;
 import com.baloise.geo.model.Gebaeude;
 import com.baloise.geo.model.Location;
+import com.baloise.geo.model.Representation;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -19,12 +21,12 @@ public class GeoCodeXyz implements GeoCoder {
 	}
 
 	@Override
-	public Location code(Gebaeude geb) throws IOException {
+	public Location locate(Gebaeude geb) throws IOException {
 		try {
 			String url = format("https://geocode.xyz/%s %s%s, %s %s?json=1&region=Europe", geb.strasse.STRBEZ2L, geb.HNR, geb.HNRA, geb.strasse.plz.POSTLEITZAHL, geb.strasse.plz.ORTBEZ18);
 			JSONObject json = Unirest.get(url).asJson().getBody().getObject();
 			Location loc = new Location();
-			loc.representation =json.toString();
+			loc.representation = new Representation(Format.GEOCODE_XYZ_V1, json.toString());
 			loc.confidence = json.getJSONObject("standard").getDouble("confidence");
 			loc.longitude = json.getDouble("longt");
 			loc.latitude = json.getDouble("latt");
