@@ -1,4 +1,4 @@
-package com.baloise.geo;
+package com.baloise.geo.http;
 
 import static java.lang.String.format;
 

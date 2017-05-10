@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -24,7 +25,25 @@ public class GeoCoderCache implements GeoCoder {
 
 	@Override
 	public Location locate(Gebaeude geb) throws IOException {
-		return contains(geb) ? get(geb) : store(geb, delegate.locate(geb));
+		if(inError(geb)) throw new IOException(geb.HAUSKEY + "is in error");
+		try {
+			return contains(geb) ? get(geb) : store(geb, delegate.locate(geb));
+		} catch (IOException e) {
+			error(geb, e.getMessage());
+			throw e;
+		}
+	}
+
+	private boolean inError(Gebaeude geb) {
+		return resolveError(geb).toFile().exists();
+	}
+
+	private void error(Gebaeude geb, String message) {
+		try {
+			Files.write(resolveError(geb), message.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Location store(Gebaeude geb, Location loc) throws IOException {
@@ -42,13 +61,16 @@ public class GeoCoderCache implements GeoCoder {
 		return resolve(geb).toFile().exists();
 	}
 
-	private Path resolve(Gebaeude geb) {
-		return repo.resolve(getPath(geb));
+	private Path resolveError(Gebaeude geb) {
+		return resolve(geb, ".error.txt");
 	}
-
-	Path getPath(Gebaeude geb) {
-		Path path = Paths.get(format("%s/%s/%s.json", geb.HAUSKEY.longValue() % 100, geb.HAUSKEY.longValue() % 10000, geb.HAUSKEY));
-		return path;
+	
+	private Path resolve(Gebaeude geb) {
+		return resolve(geb, ".json");
+	}
+	
+	private Path resolve(Gebaeude geb, String postFix) {
+		return repo.resolve(Paths.get(format("%s/%s/%s%s", geb.HAUSKEY.longValue() % 100, geb.HAUSKEY.longValue() % 10000, geb.HAUSKEY, postFix)));
 	}
 
 }
