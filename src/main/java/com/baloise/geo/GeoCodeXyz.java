@@ -24,7 +24,7 @@ public class GeoCodeXyz implements GeoCoder {
 			String url = format("https://geocode.xyz/%s %s%s, %s %s?json=1&region=Europe", geb.strasse.STRBEZ2L, geb.HNR, geb.HNRA, geb.strasse.plz.POSTLEITZAHL, geb.strasse.plz.ORTBEZ18);
 			JSONObject json = Unirest.get(url).asJson().getBody().getObject();
 			Location loc = new Location();
-			loc.rep =json.toString();
+			loc.representation =json.toString();
 			loc.confidence = json.getDouble("longt");
 			loc.latitude = json.getDouble("latt");
 			return loc;

@@ -45,7 +45,7 @@ public class GeoCoderCLI {
 	
 	private void encode(Gebaeude geb) {
 		try {
-			System.out.println(geoCodeXyz.code(geb).rep);
+			System.out.println(geoCodeXyz.code(geb).representation);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
