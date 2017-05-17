@@ -1,72 +1,54 @@
 package com.baloise.geo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.baloise.geo.model.Gebaeude;
 import com.baloise.geo.model.Jvnfras;
+import com.baloise.geo.model.Location;
 import com.baloise.geo.model.Postleitzahl;
 import com.baloise.geo.model.Strasse;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 
 public class GeoCoderCLI {
 
 	Jvnfras<Postleitzahl> plz = new Jvnfras<>();
 	Jvnfras<Strasse> strassen = new Jvnfras<>();
 	Jvnfras<Gebaeude> gebaeude = new Jvnfras<>();
-	transient GeoCoder geoCoder = new GeoCoderCache(new GeoCodeXyz(), Paths.get("repo"));
 
 	public static void main(String[] args) throws Exception {
-		Kryo kryo = new Kryo();
-		File save = new File("save.bin");
-		GeoCoderCLI geo = load(kryo, save);
-
-		geo.locate();
+		GeoCoderCLI geo = new GeoCoderCLI();
 		
-		if (!save.exists()) {
-			try (Output output = new Output(new FileOutputStream(save));) {
-				kryo.writeObject(output, geo);
-			}
-		}
-
-	}
-
-	private void locate() {
-		gebaeude.values().stream()
-		.skip(200)
-		.limit(100).forEach(this::locate);
-	}
-	
-	private void locate(Gebaeude geb) {
-		try {
-			System.out.println(geoCoder.locate(geb).representation.body);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private static GeoCoderCLI load(Kryo kryo, File save) throws FileNotFoundException, IOException {
-		GeoCoderCLI geo;
-		if (save.exists()) {
-			System.out.println("loding from " +save);
-			try (Input input = new Input(new FileInputStream(save))) {
-				geo = kryo.readObject(input, GeoCoderCLI.class);
-			}
-		} else {
-			geo = new GeoCoderCLI();
+		H2DB h2 = new H2DB();
+		Mapper mapper = new Mapper();
+		if(h2.withDB(db -> db.from(new Location()).selectCount()) <1) {
+			//h2.withDB(db -> db.dropTable(Location.class));
+			System.out.println("Initial load");
 			geo.parseCSV();
+			System.out.println("mapping");
+			List<Location> locations = 
+					geo.gebaeude.values().stream()
+					.map(mapper::map)
+					.collect(Collectors.toList());
+			
+			System.out.println("writing db");
+			h2.withDB(db -> {db.insertAll(locations); return null;});
 		}
-		return geo;
+		
+		h2.withDB(db -> {
+			Location l = new Location();
+			db.from(l).where(l.lng).atMost(0D).and(l.lat).atMost(0D).limit(100).select().stream().forEach(loc -> {
+				System.out.println(loc);
+			});
+			return null;
+		});
+		
 	}
+
 
 	private void parseCSV() throws IOException {
 		Path path = Paths.get("Post_Adressdaten20170425.csv");
